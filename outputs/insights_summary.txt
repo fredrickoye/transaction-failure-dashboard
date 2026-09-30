@@ -1,0 +1,54 @@
+
+TRANSACTION FAILURE ROOT-CAUSE ANALYSIS – KEY FINDINGS
+=======================================================
+
+Dataset: 8,000 synthetic transactions over ~90 days
+Overall failure rate: 23.3%
+
+1. PROVIDER PERFORMANCE
+                  total  failed  failure_rate_pct
+payment_provider                                 
+Provider A         3786     800              21.1
+Provider B         2603     740              28.4
+Provider C         1611     327              20.3
+
+   → Provider B shows the highest failure rate.
+   → Recommendation: Investigate Provider B timeout/webhook issues; consider routing high-value traffic preferentially to lower-failure providers during peak risk windows.
+
+2. CHANNEL PERFORMANCE
+            total  failed  failure_rate
+channel                                
+Mobile App   2865     608         0.212
+POS           814     200         0.246
+USSD         1162     326         0.281
+Web          3159     733         0.232
+
+   → USSD carries a noticeably higher failure rate than Web/Mobile.
+   → Recommendation: Review USSD session handling and timeout settings.
+
+3. TOP FAILURE REASONS
+failure_reason
+Webhook failure    258
+Invalid account    244
+OTP failure        239
+Network error      239
+Timeout            228
+
+4. TIME-OF-DAY PATTERN
+   Highest failure rates occur in the early morning hours (00:00–05:00).
+   → Possible causes: lower monitoring coverage, provider maintenance windows, or network instability.
+
+5. AMOUNT RELATIONSHIP
+   Failed transactions skew slightly higher in amount than successful ones.
+   → High-value transactions may warrant additional confirmation steps or alternative routing.
+
+BUSINESS IMPLICATION
+--------------------
+These patterns can be turned into concrete ops actions:
+- Provider-level SLAs and automated failover rules
+- Channel-specific monitoring alerts
+- Time-based staffing or monitoring coverage adjustments
+- Pre-emptive customer messaging when a provider is degraded
+
+All data is synthetic and modelled on common Nigerian fintech payment flows.
+No real customer or company data was used.
